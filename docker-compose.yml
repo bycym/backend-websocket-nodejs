@@ -1,0 +1,69 @@
+version: '3'
+services:
+  db:
+    hostname: 'postgres-db'
+    image: postgres:latest
+    container_name: postgres-db
+    ports:
+      - 5432:5432
+    networks:
+      - ws_network
+    restart: always
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: main
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U user -d main" ]
+      interval: 1s
+      timeout: 5s
+      retries: 20
+    
+  python-mocked-streamer:
+    container_name: python-mocked-streamer
+    environment:
+      BACKEND_PORT: ${BACKEND_PORT:-3500}
+      DIR_PATH: ${DIR_PATH:-lines}
+      BACKEND_ADDRESS: ${SERVER_ADDRESS:-localhost}
+    build:
+      context: .
+      dockerfile: ./mocked-streamer/Dockerfile
+      args:
+        MOCK_PORT: ${MOCK_PORT:-3500}
+    ports:
+      - "${MOCK_PORT:-3500}:${MOCK_PORT:-3500}"
+    volumes:
+      - ./mocked-streamer/server.py:/app/server.py
+    command: ["python", "server.py"]
+
+  backend:
+    hostname: 'backend-service'
+    depends_on:
+      - db
+      - python-mocked-streamer
+    networks:
+      - ws_network
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/opt/app:delegated
+      - node_modules:/opt/app/node_modules
+    ports:
+      - ${BACKEND_PORT:-4200}:${BACKEND_PORT:-4200}
+    environment:
+      - DB_URL=${DB_URL:-mongodb+srv://myDatabaseUser:D1fficultP%40ssw0rd@cluster0.example.mongodb.net/?retryWrites=true&w=majority}
+    command: /bin/sh -c 'npm ci && npm run dev:watch'
+
+volumes:
+  node_modules:
+  db_data:
+    driver: local
+
+networks:
+  ws_network:
+    driver: bridge
+    name: 'ws_network'
+    external: false

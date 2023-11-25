@@ -1,0 +1,41 @@
+{
+  "compilerOptions": {
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "module": "commonjs",
+    "target": "ESNext",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "esModuleInterop": true,
+    "outDir": "build",
+    "baseUrl": ".",
+    "paths": {
+      "@domain/*": [
+        "src/core/domain/*"
+      ],
+      "@infrastructure/*": [
+        "src/infrastructure/*"
+      ],
+      "@controllers/*": [
+        "src/interfaces/controllers/*"
+      ],
+      "@interfaces/*": [
+        "src/interfaces/*"
+      ],
+      "@shared/*": [
+        "src/shared/*"
+      ],
+      "@test/*": [
+        "src/__test__/*"
+      ],
+    }
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}
