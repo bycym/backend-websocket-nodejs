@@ -26,7 +26,7 @@ services:
     environment:
       BACKEND_PORT: ${BACKEND_PORT:-3500}
       DIR_PATH: ${DIR_PATH:-lines}
-      BACKEND_ADDRESS: ${SERVER_ADDRESS:-localhost}
+      BACKEND_ADDRESS: ${BACKEND_ADDRESS:-localhost}
     build:
       context: .
       dockerfile: ./mocked-streamer/Dockerfile

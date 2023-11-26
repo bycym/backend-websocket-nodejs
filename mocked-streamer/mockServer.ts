@@ -14,7 +14,7 @@ const BOATINFO = {
   name: 'csobanka'
 } as BoatInfo;
 
-const serverUrl = `ws://${process.env.SERVER_ADDRESS}:${process.env.BACKEND_PORT}/ws?name${BOATINFO.name}`;
+const serverUrl = `ws://${process.env.BACKEND_ADDRESS}:${process.env.BACKEND_PORT}/ws?name${BOATINFO.name}`;
 const directoryPath = 'mocked-streamer/lines';
 const FREQUENCY: number = 1000 // 1 Hz
 const DATA_REGEX = /^\d{0,3}\.\d*,\d{0,3}\.\d*,\d{0,3}\.\d*$/
