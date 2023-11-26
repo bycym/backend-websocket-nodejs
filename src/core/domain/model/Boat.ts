@@ -1,15 +1,11 @@
-export interface IPosition {
-  latitude: number;
-  longitude: number;
-  heading: number
-}
+import { IPosition } from "./Position";
+
 export interface IBoat {
   boatName: string;
-  position: IPosition
 }
+
 export class Boat implements IBoat{
-  constructor(public boatName: string, public position: IPosition) {
+  constructor(public boatName: string) {
     this.boatName = boatName
-    this.position = position
   }
 }

@@ -1,9 +1,11 @@
 import express, { Request, Response } from 'express';
 import { BoatService } from '../../application/boatService';
 import { BoatRepositoryImpl } from '../../infrastructure/persistence/boatRepositoryImpl';
+import { PositionRepositoryImpl } from '@infrastructure/persistence/positionRepositoryImpl';
 
 const boatRepository = new BoatRepositoryImpl();
-const boatService = new BoatService(boatRepository);
+const positionRepository = new PositionRepositoryImpl();
+const boatService = new BoatService(boatRepository,positionRepository);
 
 const boatController = express.Router();
 

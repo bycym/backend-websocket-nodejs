@@ -18,6 +18,9 @@
       "@infrastructure/*": [
         "src/infrastructure/*"
       ],
+      "@entity/*": [
+        "src/infrastructure/persistence/entity/*"
+      ],
       "@controllers/*": [
         "src/interfaces/controllers/*"
       ],

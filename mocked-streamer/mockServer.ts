@@ -3,8 +3,18 @@ import * as path from 'path';
 import * as readline from 'readline';
 import WebSocket from 'ws';
 import 'dotenv/config'
+import { v4 as uuid } from 'uuid';
 
-const serverUrl = `ws://${process.env.SERVER_ADDRESS}:${process.env.BACKEND_PORT}/ws`;
+export type BoatInfo = {
+  id: string // UUID
+  name: string
+}
+const BOATINFO = {
+  // id: 'AECA6542-ECB2-4D58-B906-D2435F9B249E', //uuid(),
+  name: 'csobanka'
+} as BoatInfo;
+
+const serverUrl = `ws://${process.env.SERVER_ADDRESS}:${process.env.BACKEND_PORT}/ws?name${BOATINFO.name}`;
 const directoryPath = 'mocked-streamer/lines';
 const FREQUENCY: number = 1000 // 1 Hz
 const DATA_REGEX = /^\d{0,3}\.\d*,\d{0,3}\.\d*,\d{0,3}\.\d*$/
@@ -52,8 +62,17 @@ const run = async (): Promise<void> => {
 
   const dataArray = await readContentFromDirectory(directoryPath)
   for(const data in dataArray) {
-    console.log(`Send ${JSON.stringify(dataArray[data])} data. ${Date()}`)
-    ws.send(dataArray[data]);
+    const row = dataArray[data]
+    if(row.split(',').length !== 3) throw new Error(`Issue with data: ${row}`)
+    const position = row.split(',')
+    const newData = {
+      latitude: position[0],
+      longitude: position[1],
+      heading: position[2]
+    }
+    const jsonData = JSON.stringify(newData);
+    console.log(`Send ${jsonData} data. ${Date()}`)
+    ws.send(jsonData);
     await wait(FREQUENCY)
   }
   ws.close();
